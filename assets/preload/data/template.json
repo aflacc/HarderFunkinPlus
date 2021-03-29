@@ -1,0 +1,17 @@
+{
+  "song": {
+    "sectionLengths": [],
+    "player1": "bf",
+    "player2": "gf",
+    "notes": [
+      {
+      }
+    ],
+    "song": "Song Name",
+    "validScore": true,
+    "sections": 0,
+    "needsVoices": false,
+    "speed": 3,
+    "bpm": 100
+  }
+}

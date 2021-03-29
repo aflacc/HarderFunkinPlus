@@ -1,0 +1,2 @@
+debug mode (DO NOT TURN IT ON IF YOUR NOT VR CORE) // 0 = false 1 = true
+0
