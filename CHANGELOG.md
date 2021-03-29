@@ -1,6 +1,5 @@
-# Harder Funkin'+
-This is the Github for Harder Funkin'+! Which can be downloaded on the [Itch.Io](https://aflacck.itch.io/harder-funkin). (Its not allowed on gamebanana sadly)
+# ChangeLog
 
-
-
-I'll be updating this GitHub as I work on the mod.
+v1.5-b
+- Fixed Notes appearing from the top and not the bottom
+- Fixed a problem with Up and Down arrow sprites being flipped. 
