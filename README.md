@@ -3,4 +3,4 @@ This is the Github for Harder Funkin'+! Which can be downloaded on the [Itch.Io]
 
 
 
-I'll be updating this GitHub as I work on the mod.
+I'll be updating this GitHub as I work on the mod. So...
