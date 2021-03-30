@@ -41,7 +41,7 @@ class Note extends FlxSprite
 			prevNote = this;
 
 		if (!FlxG.save.data.downscroll)
-			flipY = true;
+			flipY = false;
 
 		this.prevNote = prevNote;
 		isSustainNote = sustainNote;
@@ -106,7 +106,7 @@ class Note extends FlxSprite
 				animation.addByPrefix('redhold', 'red hold piece');
 				animation.addByPrefix('bluehold', 'blue hold piece');
 
-				if (FlxG.save.data.downscroll)
+				if (!FlxG.save.data.downscroll)
 				{
 					animation.addByPrefix('purpleholdend', 'pruple end hold');
 					animation.addByPrefix('greenholdend', 'green hold end');

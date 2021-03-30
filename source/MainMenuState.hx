@@ -98,9 +98,13 @@ class MainMenuState extends MusicBeatState
 		FlxG.camera.follow(camFollow, null, 0.06);
 
 		var versionShit:FlxText = new FlxText(1, FlxG.height - 18, 0, "Harder Funkin'+ Version 1.5-a", 12);
+		var PFNFversionShit:FlxText = new FlxText(-1, FlxG.height - 32, 0, "ProjectFNF v0.1 BETA", 12);
 		versionShit.scrollFactor.set();
+		PFNFversionShit.scrollFactor.set();
 		versionShit.setFormat("VCR OSD Mono", 18, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		PFNFversionShit.setFormat("VCR OSD Mono", 18, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionShit);
+		add(PFNFversionShit);
 
 		// NG.core.calls.event.logEvent('swag').send();
 

@@ -1610,67 +1610,6 @@ class PlayState extends MusicBeatState
 		return num;
 	}
 
-	function generateRanking():String
-	{
-		var ranking:String = "N/A";
-
-		if (misses == 0 && bads == 0 && shits == 0 && goods == 0) // Marvelous (SICK) Full Combo
-			ranking = "(MFC)";
-		else if (misses == 0 && bads == 0 && shits == 0 && goods >= 1) // Good Full Combo (Nothing but Goods & Sicks)
-			ranking = "(GFC)";
-		else if ((shits < 10 && shits != 0 || bads < 10 && bads != 0) && misses == 0) // Single Digit Combo Breaks
-			ranking = "(SDCB)";
-		else if (misses == 0 && (shits >= 10 || bads >= 10)) // Regular FC
-			ranking = "(FC)";
-		else if (misses >= 10 || (shits >= 10 || bads >= 10)) // Combo Breaks
-			ranking = "(CB)";
-		else
-			ranking = "";
-
-		// WIFE TIME :)))) (based on Wife3)
-
-		var wifeConditions:Array<Bool> = [
-			accuracy >= 90, // A:
-			accuracy >= 85, // A.
-			accuracy >= 80, // A
-			accuracy >= 70, // B
-			accuracy >= 60, // C
-			accuracy < 60 // D
-		];
-
-		for (i in 0...wifeConditions.length)
-		{
-			var b = wifeConditions[i];
-			if (b)
-			{
-				switch (i)
-				{
-					case 0:
-						ranking += " A";
-					case 1:
-						ranking += " A-";
-					case 2:
-						ranking += " B+";
-					case 3:
-						ranking += " B";
-					case 4:
-						ranking += " B-";
-					case 5:
-						ranking += " C+";
-					case 6:
-						ranking += " C";
-					case 7:
-						ranking += " C-";
-				}
-				break;
-			}
-		}
-
-		if (accuracy == 0)
-			ranking = "N/A";
-
-		return ranking;
-	}
 
 	override public function update(elapsed:Float)
 	{
@@ -1704,20 +1643,13 @@ class PlayState extends MusicBeatState
 
 		super.update(elapsed);
 
-		if (FlxG.save.data.accuracyDisplay)
-		{
-			scoreTxt.text = "Score:" + (FlxG.save.data.etternaMode ? Math.max(0, etternaModeScore) + " (" + songScore + ")" : "" + songScore);
-		}
-		else
-		{
-			scoreTxt.text = "Score:" + songScore;
-		}
+		scoreTxt.text = "Score:" + songScore;
+
 		if (FlxG.keys.justPressed.ENTER && startedCountdown && canPause)
 		{
 			persistentUpdate = false;
 			persistentDraw = true;
 			paused = true;
-
 			// 1 / 1000 chance for Gitaroo Man easter egg
 			if (FlxG.random.bool(0.1))
 			{
@@ -1726,56 +1658,43 @@ class PlayState extends MusicBeatState
 			}
 			else
 				openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
-
 			#if desktop
 			DiscordClient.changePresence(detailsPausedText, SONG.song + " (" + storyDifficultyText + ")", iconRPC);
 			#end
 		}
-
 		if (FlxG.keys.justPressed.SEVEN)
 		{
 			FlxG.switchState(new ChartingState());
-
 			#if desktop
 			DiscordClient.changePresence("Chart Editor", null, null, true);
 			#end
 		}
-
 		// FlxG.watch.addQuick('VOL', vocals.amplitudeLeft);
 		// FlxG.watch.addQuick('VOLRight', vocals.amplitudeRight);
-
 		iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.50)));
 		iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.50)));
-
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
-
 		var iconOffset:Int = 26;
 
 		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
 		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (iconP2.width - iconOffset);
-
 		if (health > 2)
 			health = 2;
-
 		if (healthBar.percent < 20)
 			iconP1.animation.curAnim.curFrame = 1;
 		else
 			iconP1.animation.curAnim.curFrame = 0;
-
 		if (healthBar.percent > 80)
 			iconP2.animation.curAnim.curFrame = 1;
 		else
 			iconP2.animation.curAnim.curFrame = 0;
-
 		/* if (FlxG.keys.justPressed.NINE)
 			FlxG.switchState(new Charting()); */
-
 		#if debug
 		if (FlxG.keys.justPressed.EIGHT)
 			FlxG.switchState(new AnimationDebug(SONG.player2));
 		#end
-
 		if (startingSong)
 		{
 			if (startedCountdown)
@@ -1789,12 +1708,10 @@ class PlayState extends MusicBeatState
 		{
 			// Conductor.songPosition = FlxG.sound.music.time;
 			Conductor.songPosition += FlxG.elapsed * 1000;
-
 			if (!paused)
 			{
 				songTime += FlxG.game.ticks - previousFrameTime;
 				previousFrameTime = FlxG.game.ticks;
-
 				// Interpolation type beat
 				if (Conductor.lastSongPos != Conductor.songPosition)
 				{
@@ -1804,22 +1721,18 @@ class PlayState extends MusicBeatState
 					// trace('MISSED FRAME');
 				}
 			}
-
 			// Conductor.lastSongPos = FlxG.sound.music.time;
 		}
-
 		if (generatedMusic && PlayState.SONG.notes[Std.int(curStep / 16)] != null)
 		{
 			if (curBeat % 4 == 0)
 			{
 				// trace(PlayState.SONG.notes[Std.int(curStep / 16)].mustHitSection);
 			}
-
 			if (camFollow.x != dad.getMidpoint().x + 150 && !PlayState.SONG.notes[Std.int(curStep / 16)].mustHitSection)
 			{
 				camFollow.setPosition(dad.getMidpoint().x + 150, dad.getMidpoint().y - 100);
 				// camFollow.setPosition(lucky.getMidpoint().x - 120, lucky.getMidpoint().y + 210);
-
 				switch (dad.curCharacter)
 				{
 					case 'mom':
@@ -1831,20 +1744,16 @@ class PlayState extends MusicBeatState
 						camFollow.y = dad.getMidpoint().y - 430;
 						camFollow.x = dad.getMidpoint().x - 100;
 				}
-
 				if (dad.curCharacter == 'mom')
 					vocals.volume = 1;
-
 				if (SONG.song.toLowerCase() == 'tutorial')
 				{
 					tweenCamIn();
 				}
 			}
-
 			if (PlayState.SONG.notes[Std.int(curStep / 16)].mustHitSection && camFollow.x != boyfriend.getMidpoint().x - 100)
 			{
 				camFollow.setPosition(boyfriend.getMidpoint().x - 100, boyfriend.getMidpoint().y - 100);
-
 				switch (curStage)
 				{
 					case 'limo':
@@ -1862,23 +1771,19 @@ class PlayState extends MusicBeatState
 						camFollow.x = boyfriend.getMidpoint().x - 200;
 						camFollow.y = boyfriend.getMidpoint().y - 200;
 				}
-
 				if (SONG.song.toLowerCase() == 'tutorial')
 				{
 					FlxTween.tween(FlxG.camera, {zoom: 1}, (Conductor.stepCrochet * 4 / 1000), {ease: FlxEase.quadInOut});
 				}
 			}
 		}
-
 		if (camZooming)
 		{
 			FlxG.camera.zoom = FlxMath.lerp(defaultCamZoom, FlxG.camera.zoom, 0.95);
 			camHUD.zoom = FlxMath.lerp(1, camHUD.zoom, 0.95);
 		}
-
 		FlxG.watch.addQuick("beatShit", curBeat);
 		FlxG.watch.addQuick("stepShit", curStep);
-
 		if (curSong == 'Fresh')
 		{
 			switch (curBeat)
@@ -1897,7 +1802,6 @@ class PlayState extends MusicBeatState
 					// FlxG.switchState(new TitleState());
 			}
 		}
-
 		if (curSong == 'Bopeebo')
 		{
 			switch (curBeat)
@@ -1909,54 +1813,45 @@ class PlayState extends MusicBeatState
 			}
 		}
 		// better streaming of shit
-
 		// RESET = Quick Game Over Screen
 		if (controls.RESET)
 		{
 			health = 0;
 			trace("RESET = True");
 		}
-
 		// CHEAT = brandon's a pussy
 		if (controls.CHEAT)
 		{
 			health += 1;
 			trace("User is cheating!");
 		}
-
 		if (health <= 0)
 		{
 			boyfriend.stunned = true;
-
 			persistentUpdate = false;
 			persistentDraw = false;
 			paused = true;
-
 			vocals.stop();
 			FlxG.sound.music.stop();
-
 			openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
-
 			// FlxG.switchState(new GameOverState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
-
 			#if desktop
 			// Game Over doesn't get his own variable because it's only used here
 			DiscordClient.changePresence("Game Over - " + detailsText, SONG.song + " (" + storyDifficultyText + ")", iconRPC);
 			#end
 		}
-
 		if (unspawnNotes[0] != null)
 		{
 			if (unspawnNotes[0].strumTime - Conductor.songPosition < 1500)
 			{
 				var dunceNote:Note = unspawnNotes[0];
-				notes.add(dunceNote);
 
+				notes.add(dunceNote);
 				var index:Int = unspawnNotes.indexOf(dunceNote);
+
 				unspawnNotes.splice(index, 1);
 			}
 		}
-
 		if (generatedMusic)
 		{
 			notes.forEachAlive(function(daNote:Note) // fuck you kade I hate you so much this is my code now
@@ -1971,20 +1866,16 @@ class PlayState extends MusicBeatState
 					daNote.visible = true;
 					daNote.active = true;
 				}
-
 				if (!daNote.mustPress && daNote.wasGoodHit)
 				{
 					if (SONG.song != 'Tutorial')
 						camZooming = true;
-
 					var altAnim:String = "";
-
 					if (SONG.notes[Math.floor(curStep / 16)] != null)
 					{
 						if (SONG.notes[Math.floor(curStep / 16)].altAnim)
 							altAnim = '-alt';
 					}
-
 					switch (Math.abs(daNote.noteData))
 					{
 						case 2:
@@ -1996,17 +1887,13 @@ class PlayState extends MusicBeatState
 						case 0:
 							dad.playAnim('singLEFT' + altAnim, true);
 					}
-
 					dad.holdTimer = 0;
-
 					if (SONG.needsVoices)
 						vocals.volume = 1;
-
 					daNote.kill();
 					notes.remove(daNote, true);
 					daNote.destroy();
 				}
-
 				if (FlxG.save.data.downscroll)
 					daNote.y = (strumLine.y - (Conductor.songPosition - daNote.strumTime) * (-0.45 * FlxMath.roundDecimal(SONG.speed, 1)));
 				else
@@ -2014,7 +1901,6 @@ class PlayState extends MusicBeatState
 				// trace(daNote.y);
 				// WIP interpolation shit? Need to fix the pause issue
 				// daNote.y = (strumLine.y - (songTime - daNote.strumTime) * (0.45 * PlayState.SONG.speed));
-
 				if ((daNote.y < -daNote.height && !FlxG.save.data.downscroll || daNote.y >= strumLine.y + 106 && FlxG.save.data.downscroll)
 					&& daNote.mustPress)
 				{
@@ -2031,20 +1917,16 @@ class PlayState extends MusicBeatState
 						if (theFunne)
 							noteMiss(daNote.noteData, daNote);
 					}
-
 					daNote.active = false;
 					daNote.visible = false;
-
 					daNote.kill();
 					notes.remove(daNote, true);
 					daNote.destroy();
 				}
 			});
 		}
-
 		if (!inCutscene)
 			keyShit();
-
 		#if debug
 		if (FlxG.keys.justPressed.ONE)
 			endSong();
@@ -2143,7 +2025,6 @@ class PlayState extends MusicBeatState
 	private function popUpScore(strumtime:Float):Void
 	{
 		var noteDiff:Float = Math.abs(strumtime - Conductor.songPosition);
-		var wife:Float = EtternaFunctions.wife3(noteDiff, FlxG.save.data.etternaMode ? 1 : 1.7);
 		// boyfriend.playAnim('hey');
 		vocals.volume = 1;
 
@@ -2161,7 +2042,6 @@ class PlayState extends MusicBeatState
 
 		var daRating:String = "sick";
 
-		totalNotesHit += wife;
 
 		if (noteDiff > Conductor.safeZoneOffset * 2)
 		{
@@ -2252,8 +2132,7 @@ class PlayState extends MusicBeatState
 			sicks++;
 		}
 
-		if (FlxG.save.data.etternaMode)
-			etternaModeScore += Math.round(score / wife);
+
 
 		// trace('Wife accuracy loss: ' + wife + ' | Rating: ' + daRating + ' | Score: ' + score + ' | Weight: ' + (1 - wife));
 
@@ -2651,9 +2530,8 @@ class PlayState extends MusicBeatState
 			misses++;
 
 			var noteDiff:Float = Math.abs(daNote.strumTime - Conductor.songPosition);
-			var wife:Float = EtternaFunctions.wife3(noteDiff, FlxG.save.data.etternaMode ? 1 : 1.7);
 
-			totalNotesHit += wife;
+
 
 			songScore -= 10;
 
@@ -2729,8 +2607,6 @@ class PlayState extends MusicBeatState
 
 	var mashing:Int = 0;
 	var mashViolations:Int = 0;
-
-	var etternaModeScore:Int = 0;
 
 	function noteCheck(keyP:Bool, note:Note):Void
 	{
@@ -2813,7 +2689,6 @@ class PlayState extends MusicBeatState
 
 	var trainMoving:Bool = false;
 	var trainFrameTiming:Float = 0;
-
 	var trainCars:Int = 8;
 	var trainFinishing:Bool = false;
 	var trainCooldown:Int = 0;
