@@ -1,6 +1,5 @@
 package;
 
-import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.math.FlxMath;
@@ -29,8 +28,8 @@ class Note extends FlxSprite
 
 	public static var swagWidth:Float = 160 * 0.7;
 	public static var PURP_NOTE:Int = 0;
-	public static var GREEN_NOTE:Int = 1;
-	public static var BLUE_NOTE:Int = 2;
+	public static var GREEN_NOTE:Int = 2;
+	public static var BLUE_NOTE:Int = 1;
 	public static var RED_NOTE:Int = 3;
 
 	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false)
@@ -40,16 +39,13 @@ class Note extends FlxSprite
 		if (prevNote == null)
 			prevNote = this;
 
-		if (!FlxG.save.data.downscroll)
-			flipY = false;
-
 		this.prevNote = prevNote;
 		isSustainNote = sustainNote;
 
 		x += 50;
 		// MAKE SURE ITS DEFINITELY OFF SCREEN?
 		y -= 2000;
-		this.strumTime = strumTime + FlxG.save.data.offset;
+		this.strumTime = strumTime;
 
 		this.noteData = noteData;
 
@@ -65,29 +61,19 @@ class Note extends FlxSprite
 				animation.add('blueScroll', [5]);
 				animation.add('purpleScroll', [4]);
 
-				animation.add('purplehold', [0]);
-				animation.add('greenhold', [2]);
-				animation.add('redhold', [3]);
-				animation.add('bluehold', [1]);
-
 				if (isSustainNote)
 				{
 					loadGraphic(Paths.image('weeb/pixelUI/arrowEnds'), true, 7, 6);
 
-					if (FlxG.save.data.downscroll)
-					{
-						animation.add('purpleholdend', [4]);
-						animation.add('greenholdend', [6]);
-						animation.add('redholdend', [7]);
-						animation.add('blueholdend', [5]);
-					}
-					else
-					{
-						animation.add('purpleholdend', [4], 0, false, false, true);
-						animation.add('greenholdend', [6], 0, false, false, true);
-						animation.add('redholdend', [7], 0, false, false, true);
-						animation.add('blueholdend', [5], 0, false, false, true);
-					}
+					animation.add('purpleholdend', [4]);
+					animation.add('greenholdend', [6]);
+					animation.add('redholdend', [7]);
+					animation.add('blueholdend', [5]);
+
+					animation.add('purplehold', [0]);
+					animation.add('greenhold', [2]);
+					animation.add('redhold', [3]);
+					animation.add('bluehold', [1]);
 				}
 
 				setGraphicSize(Std.int(width * PlayState.daPixelZoom));
@@ -101,25 +87,15 @@ class Note extends FlxSprite
 				animation.addByPrefix('blueScroll', 'blue0');
 				animation.addByPrefix('purpleScroll', 'purple0');
 
+				animation.addByPrefix('purpleholdend', 'pruple end hold');
+				animation.addByPrefix('greenholdend', 'green hold end');
+				animation.addByPrefix('redholdend', 'red hold end');
+				animation.addByPrefix('blueholdend', 'blue hold end');
+
 				animation.addByPrefix('purplehold', 'purple hold piece');
 				animation.addByPrefix('greenhold', 'green hold piece');
 				animation.addByPrefix('redhold', 'red hold piece');
 				animation.addByPrefix('bluehold', 'blue hold piece');
-
-				if (!FlxG.save.data.downscroll)
-				{
-					animation.addByPrefix('purpleholdend', 'pruple end hold');
-					animation.addByPrefix('greenholdend', 'green hold end');
-					animation.addByPrefix('redholdend', 'red hold end');
-					animation.addByPrefix('blueholdend', 'blue hold end');
-				}
-				else
-				{
-					animation.addByPrefix('purpleholdend', 'pruple end hold', 0, false, false, true);
-					animation.addByPrefix('greenholdend', 'green hold end', 0, false, false, true);
-					animation.addByPrefix('redholdend', 'red hold end', 0, false, false, true);
-					animation.addByPrefix('blueholdend', 'blue hold end', 0, false, false, true);
-				}
 
 				setGraphicSize(Std.int(width * 0.7));
 				updateHitbox();
@@ -141,6 +117,8 @@ class Note extends FlxSprite
 				x += swagWidth * 3;
 				animation.play('redScroll');
 		}
+
+		// trace(prevNote);
 
 		if (isSustainNote && prevNote != null)
 		{
