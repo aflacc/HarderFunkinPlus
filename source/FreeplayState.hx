@@ -79,8 +79,15 @@ class FreeplayState extends MusicBeatState
 		if (StoryMenuState.weekUnlocked[6] || isDebug)
 			addWeek(['Senpai', 'Roses', 'Thorns'], 6, ['senpai', 'senpai', 'spirit']);
 
-		addWeek(['ridge', 'Ruler-of-Everything', 'NightOfNights', 'Ugh', 'sus', 'tutorial-remix'], 7,
-			['bf', 'dad', 'bf', 'tankman', 'imposter', 'gf']); // Bonus Songs!!
+		addWeek([
+			'ridge',
+			'Ruler-of-Everything',
+			'NightOfNights',
+			'Ugh',
+			'sus',
+			'tutorial-remix',
+			'Krabbattle'
+		], 7, ['bf', 'dad', 'bf', 'tankman', 'imposter', 'gf', 'krabs']); // Bonus Songs!!
 		// LOAD MUSIC
 
 		// LOAD CHARACTERS

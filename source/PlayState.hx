@@ -762,6 +762,15 @@ class PlayState extends MusicBeatState
 				add(waveSpriteFG);
 			 */
 		}
+		if (SONG.song.toLowerCase() == 'krabbattle')
+		{
+			curStage = "krabsoffice";
+			var bg:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.image('krabsoffice'));
+			bg.antialiasing = true;
+			bg.scrollFactor.set(0.9, 0.9);
+			bg.active = false;
+			add(bg);
+		}
 		else
 		{
 			defaultCamZoom = 0.9;
@@ -2225,29 +2234,30 @@ class PlayState extends MusicBeatState
 		});
 	}
 
-	function noteMiss(direction:Int = 1, daNote:Note):Void
+	function noteMiss(direction:Int = 1):Void
 	{
 		if (!boyfriend.stunned)
 		{
-			if (storyDifficulty != 3)
-			{
-				health -= 0.04;
-			}
-
+			health -= 0.04;
 			if (combo > 5 && gf.animOffsets.exists('sad'))
 			{
 				gf.playAnim('sad');
 			}
 			combo = 0;
-			misses++;
-
-			var noteDiff:Float = Math.abs(daNote.strumTime - Conductor.songPosition);
 
 			songScore -= 10;
 
 			FlxG.sound.play(Paths.soundRandom('missnote', 1, 3), FlxG.random.float(0.1, 0.2));
 			// FlxG.sound.play(Paths.sound('missnote1'), 1, false);
 			// FlxG.log.add('played imss note');
+
+			boyfriend.stunned = true;
+
+			// get stunned for 5 seconds
+			new FlxTimer().start(5 / 60, function(tmr:FlxTimer)
+			{
+				boyfriend.stunned = false;
+			});
 
 			switch (direction)
 			{
@@ -2261,6 +2271,25 @@ class PlayState extends MusicBeatState
 					boyfriend.playAnim('singRIGHTmiss', true);
 			}
 		}
+	}
+
+	function badNoteCheck()
+	{
+		// just double pasting this shit cuz fuk u
+		// REDO THIS SYSTEM!
+		var upP = controls.UP_P;
+		var rightP = controls.RIGHT_P;
+		var downP = controls.DOWN_P;
+		var leftP = controls.LEFT_P;
+
+		if (leftP)
+			noteMiss(0);
+		if (downP)
+			noteMiss(1);
+		if (upP)
+			noteMiss(2);
+		if (rightP)
+			noteMiss(3);
 	}
 
 	/*function badNoteCheck()

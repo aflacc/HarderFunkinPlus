@@ -1,19 +1,19 @@
 package;
- 
+
 import flixel.FlxSprite;
- 
+
 class HealthIcon extends FlxSprite
 {
 	/**
 	 * Used for FreeplayState! If you use it elsewhere, prob gonna annoying
 	 */
 	public var sprTracker:FlxSprite;
- 
+
 	public function new(char:String = 'bf', isPlayer:Bool = false)
 	{
 		super();
 		loadGraphic(Paths.image('iconGrid'), true, 150, 150);
- 
+
 		antialiasing = true;
 		animation.add('bf', [0, 1], 0, false, isPlayer);
 		animation.add('bf-car', [0, 1], 0, false, isPlayer);
@@ -34,10 +34,11 @@ class HealthIcon extends FlxSprite
 		animation.add('parents-christmas', [17], 0, false, isPlayer);
 		animation.add('monster', [19, 20], 0, false, isPlayer);
 		animation.add('monster-christmas', [19, 20], 0, false, isPlayer);
-        animation.add('imposter', [14, 15], 0, false, isPlayer);
-        animation.add('neil', [19, 20], 0, false, isPlayer);
-        animation.add('crumb', [10, 11], 0, false, isPlayer);
+		animation.add('imposter', [14, 15], 0, false, isPlayer);
+		animation.add('neil', [19, 20], 0, false, isPlayer);
+		animation.add('crumb', [10, 11], 0, false, isPlayer);
 		animation.add('spookyplaceholder', [24, 25], 0, false, isPlayer);
+		animation.add('krabs', [26, 27], 0, false, isPlayer);
 		animation.play(char);
 		scrollFactor.set();
 	}
